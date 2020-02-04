@@ -98,12 +98,12 @@ public class ArtifactoryService {
 		};
 	}
 
-	public JSONArray getAllArtifacts() throws JSONException {
+	private JSONArray getAllArtifacts() throws JSONException {
 		JSONObject jsonObj = new JSONObject(getAllFromArtifactory());
 		return jsonObj.getJSONArray("results");
 	}
 
-	public List<ArtifactResponse> getAllArtifactsStat(List<String> urls) {
+	private List<ArtifactResponse> getAllArtifactsStat(List<String> urls) {
 
 		long timeMilli = new Date().getTime();
 
