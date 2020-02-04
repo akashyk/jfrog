@@ -1,7 +1,9 @@
 package com.jfrog.assessment.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -107,23 +109,25 @@ public class ArtifactoryService {
 
 	private ArtifactResponse getSecondMostUsedArtifact(List<ArtifactResponse> allArtifacts) {
 
-		long max = -1;
-		long downloadCount = 0L;
+		int downloadCount = 0;
 
-		ArtifactResponse mostUsed = allArtifacts.get(0);
-		ArtifactResponse secondMostUsed = null;
-
-		for (ArtifactResponse artifact : allArtifacts) {
-
-			System.out.println(artifact.getResponse().toString());
-			downloadCount = artifact.getResponse().getDownloadCount();
-			if (downloadCount > max) {
-				secondMostUsed = mostUsed;
-				mostUsed = artifact;
-				max = downloadCount;
-			}
+		if (allArtifacts.size() < 2) {
+			return null;
 		}
 
+		Collections.sort(allArtifacts, Collections.reverseOrder());
+
+		int mostUsedCount = allArtifacts.get(0).getResponse().getDownloadCount();
+		ArtifactResponse secondMostUsed = null;
+
+		for (int i = 1; i < allArtifacts.size(); i++) {
+			downloadCount = allArtifacts.get(i).getResponse().getDownloadCount();
+
+			if (downloadCount < mostUsedCount) {
+				secondMostUsed = allArtifacts.get(i);
+				break;
+			}
+		}
 		return secondMostUsed;
 	}
 

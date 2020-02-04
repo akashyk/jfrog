@@ -2,10 +2,10 @@ package com.jfrog.assessment.model;
 
 public class ArtifactStat {
 	private String uri;
-	private long downloadCount;
-	private long lastDownloaded;
-	private long remoteDownloadCount;
-	private long remoteLastDownloaded;
+	private Integer downloadCount;
+	private Long lastDownloaded;
+	private Long remoteDownloadCount;
+	private Long remoteLastDownloaded;
 
 	public String getUri() {
 		return uri;
@@ -15,35 +15,35 @@ public class ArtifactStat {
 		this.uri = uri;
 	}
 
-	public long getDownloadCount() {
+	public Integer getDownloadCount() {
 		return downloadCount;
 	}
 
-	public void setDownloadCount(long downloadCount) {
+	public void setDownloadCount(Integer downloadCount) {
 		this.downloadCount = downloadCount;
 	}
 
-	public long getLastDownloaded() {
+	public Long getLastDownloaded() {
 		return lastDownloaded;
 	}
 
-	public void setLastDownloaded(long lastDownloaded) {
+	public void setLastDownloaded(Long lastDownloaded) {
 		this.lastDownloaded = lastDownloaded;
 	}
 
-	public long getRemoteDownloadCount() {
+	public Long getRemoteDownloadCount() {
 		return remoteDownloadCount;
 	}
 
-	public void setRemoteDownloadCount(long remoteDownloadCount) {
+	public void setRemoteDownloadCount(Long remoteDownloadCount) {
 		this.remoteDownloadCount = remoteDownloadCount;
 	}
 
-	public long getRemoteLastDownloaded() {
+	public Long getRemoteLastDownloaded() {
 		return remoteLastDownloaded;
 	}
 
-	public void setRemoteLastDownloaded(long remoteLastDownloaded) {
+	public void setRemoteLastDownloaded(Long remoteLastDownloaded) {
 		this.remoteLastDownloaded = remoteLastDownloaded;
 	}
 	
