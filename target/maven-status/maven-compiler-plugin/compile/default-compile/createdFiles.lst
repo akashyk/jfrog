@@ -2,5 +2,7 @@ com/jfrog/assessment/JfAssessmentApplication.class
 com/jfrog/assessment/api/ArtifactoryService.class
 com/jfrog/assessment/model/Results.class
 com/jfrog/assessment/model/Artifact.class
+com/jfrog/assessment/api/ArtifactResponse.class
+com/jfrog/assessment/model/ArtifactStat.class
 com/jfrog/assessment/api/ArtifactoryController.class
 com/jfrog/assessment/model/Range.class

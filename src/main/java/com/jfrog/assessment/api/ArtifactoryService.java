@@ -36,17 +36,16 @@ public class ArtifactoryService {
 	final String URL_NAME = "name";
 	final String URL_REPO = "repo";
 	final String URL_STATS = "stats";
-	final String STATUS = "Status";
-	
+
 	@Value("${jfrog.orbitera.repo.all_artifacts_url}")
-	private String artifactsArtifactsUrl;
-	
+	private String artifactsUrl;
+
 	@Value("${jfrog.orbitera.repo.artifact_stats_url}")
 	private String artifactStatsUrl;
-	
+
 	@Value("${jfrog.orbitera.repo.username}")
 	private String userName;
-	
+
 	@Value("${jfrog.orbitera.repo.password}")
 	private String password;
 
@@ -93,7 +92,7 @@ public class ArtifactoryService {
 
 	private String getAllFromArtifactory() {
 
-		String notEncoded = userName + password;
+		String notEncoded = userName + ":" + password;
 		String encodedAuth = "Basic " + Base64.getEncoder().encodeToString(notEncoded.getBytes());
 
 		HttpHeaders headers = new HttpHeaders();
@@ -101,9 +100,9 @@ public class ArtifactoryService {
 		headers.add("Authorization", encodedAuth);
 		headers.set("Content-Type", "*/*");
 
-		String requestPayload = "items.find({ \"repo\":{\"$eq\":\"jcenter-cache\"} } )";
+		String requestPayload = "items.find({\"repo\":{\"$eq\":\"jcenter-cache\"}})";
 
-		return restTemplate.postForObject(artifactsArtifactsUrl, new HttpEntity<>(requestPayload, headers), String.class);
+		return restTemplate.postForObject(artifactsUrl, new HttpEntity<>(requestPayload, headers), String.class);
 	}
 
 	private ArtifactResponse getSecondMostUsedArtifact(List<ArtifactResponse> allArtifacts) {
@@ -170,7 +169,6 @@ public class ArtifactoryService {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	private ArtifactResponse getArtifactStats(String artifactUrl) throws JSONException {
 
 		HttpHeaders header = new HttpHeaders();
