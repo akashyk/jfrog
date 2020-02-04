@@ -1,7 +1,8 @@
+com/jfrog/assessment/dto/ArtifactDto.class
 com/jfrog/assessment/JfAssessmentApplication.class
 com/jfrog/assessment/api/ArtifactoryService.class
-com/jfrog/assessment/model/Results.class
-com/jfrog/assessment/model/Artifact.class
+com/jfrog/assessment/api/Messages.class
+com/jfrog/assessment/api/ArtifactoryService$1.class
 com/jfrog/assessment/api/ArtifactResponse.class
 com/jfrog/assessment/model/ArtifactStat.class
 com/jfrog/assessment/api/ArtifactoryController.class

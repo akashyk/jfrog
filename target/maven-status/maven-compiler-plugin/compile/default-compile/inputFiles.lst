@@ -1,8 +1,8 @@
 /Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/JfAssessmentApplication.java
+/Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/api/Messages.java
 /Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/model/Range.java
 /Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/api/ArtifactoryController.java
-/Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/model/Artifact.java
-/Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/model/Results.java
+/Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/dto/ArtifactDto.java
 /Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/api/ArtifactoryService.java
 /Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/model/ArtifactStat.java
 /Users/akashyellappa/Programming/STS/jfrog/src/main/java/com/jfrog/assessment/api/ArtifactResponse.java
