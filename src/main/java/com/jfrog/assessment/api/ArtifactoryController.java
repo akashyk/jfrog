@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.jfrog.assessment.dto.ArtifactDto;
 import com.jfrog.assessment.model.ArtifactStat;
 
 @RestController
@@ -20,9 +21,9 @@ public class ArtifactoryController {
 	ArtifactoryService artifactoryService;
 
 	@GetMapping(value = "/artifacts")
-	public ResponseEntity<ArtifactStat> getArtifacts() throws JsonMappingException, JsonProcessingException, JSONException {
+	public ResponseEntity<ArtifactDto> getArtifacts() throws JsonMappingException, JsonProcessingException, JSONException {
 		
-		ArtifactStat result = artifactoryService.getSecondMostUsedArtifact();
+		ArtifactDto result = artifactoryService.getSecondMostUsedArtifact();
 		if(result == null) {
 			return  new ResponseEntity<>(null, HttpStatus.NO_CONTENT);	
 		}

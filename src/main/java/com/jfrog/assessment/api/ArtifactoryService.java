@@ -26,8 +26,15 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.jfrog.assessment.dto.ArtifactDto;
 import com.jfrog.assessment.model.ArtifactStat;
 
+/**
+ * @author akashyellappa
+ * 
+ *         This service helps getting the second most used artifact from a demo
+ *         artifactory - Orbitera
+ */
 @Service
 public class ArtifactoryService {
 
@@ -60,7 +67,7 @@ public class ArtifactoryService {
 		return new RestTemplate();
 	}
 
-	public ArtifactStat getSecondMostUsedArtifact() throws JSONException {
+	public ArtifactDto getSecondMostUsedArtifact() throws JSONException {
 		// 1. Get all artifacts
 		JSONArray artifacts = getAllArtifacts();
 
@@ -71,7 +78,24 @@ public class ArtifactoryService {
 		List<ArtifactResponse> artifactsStats = getAllArtifactsStat(urls);
 
 		// 4. Get the second most used artifact
-		return getSecondMostUsedArtifact(artifactsStats).getResponse();
+		ArtifactStat result = getSecondMostUsedArtifact(artifactsStats).getResponse();
+		
+		
+		return new ArtifactDto() {
+
+			@Override
+			public String getUri() {
+				// TODO Auto-generated method stub
+				return result.getUri();
+			}
+
+			@Override
+			public Integer getDownloadCount() {
+				// TODO Auto-generated method stub
+				return result.getDownloadCount();
+			}
+
+		};
 	}
 
 	public JSONArray getAllArtifacts() throws JSONException {
@@ -194,7 +218,7 @@ public class ArtifactoryService {
 
 		return response;
 	}
-	
+
 	private static ExecutorService getExecutorService() {
 		if (executorService == null) {
 			executorService = new ThreadPoolExecutor(5, 10, 10L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10000));
