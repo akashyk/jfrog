@@ -22,7 +22,7 @@ public class ArtifactoryController {
 	@GetMapping(value = "/artifacts")
 	public ResponseEntity<ArtifactStat> getArtifacts() throws JsonMappingException, JsonProcessingException, JSONException {
 		
-		ArtifactStat result = artifactoryService.getAllArtifacts();
+		ArtifactStat result = artifactoryService.getSecondMostUsedArtifact();
 		if(result == null) {
 			return  new ResponseEntity<>(null, HttpStatus.NO_CONTENT);	
 		}

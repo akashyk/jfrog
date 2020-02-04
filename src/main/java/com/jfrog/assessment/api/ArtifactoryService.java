@@ -1,7 +1,6 @@
 package com.jfrog.assessment.api;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
@@ -61,18 +60,45 @@ public class ArtifactoryService {
 		return new RestTemplate();
 	}
 
-	public ArtifactStat getAllArtifacts() throws JSONException {
+	public ArtifactStat getSecondMostUsedArtifact() throws JSONException {
+		// 1. Get all artifacts
+		JSONArray artifacts = getAllArtifacts();
+
+		// 2. get URLs
+		List<String> urls = getArtifactUrls(artifacts);
+
+		// 3. Get all artifacts stats
+		List<ArtifactResponse> artifactsStats = getAllArtifactsStat(urls);
+
+		// 4. Get the second most used artifact
+		return getSecondMostUsedArtifact(artifactsStats).getResponse();
+	}
+
+	public JSONArray getAllArtifacts() throws JSONException {
 		JSONObject jsonObj = new JSONObject(getAllFromArtifactory());
+		return jsonObj.getJSONArray("results");
+	}
 
-		JSONArray arrayJson = jsonObj.getJSONArray("results");
-
-		JSONObject obj;
-
-		StringBuilder sb = new StringBuilder();
+	public List<ArtifactResponse> getAllArtifactsStat(List<String> urls) {
 
 		long timeMilli = new Date().getTime();
 
 		logger.info(" Pre-processing all artifacts");
+
+		List<CompletableFuture<ArtifactResponse>> futures = urls.stream().map(url -> callApiFuture(url))
+				.collect(Collectors.toList());
+
+		List<ArtifactResponse> result = futures.stream().map(CompletableFuture::join).collect(Collectors.toList());
+
+		logger.info(" Procured all artifacts in {}ms ", timeMilli);
+		return result;
+
+	}
+
+	private List<String> getArtifactUrls(JSONArray arrayJson) throws JSONException {
+
+		JSONObject obj;
+		StringBuilder sb = new StringBuilder();
 
 		List<String> urls = new ArrayList<>();
 		for (int i = 0; i < arrayJson.length(); i++) {
@@ -82,14 +108,7 @@ public class ArtifactoryService {
 					.append("/").append(obj.get(URL_NAME)).append("?").append(URL_STATS).toString();
 			urls.add(link);
 		}
-
-		List<CompletableFuture<ArtifactResponse>> futures = urls.stream().map(url -> callApiFuture(url))
-				.collect(Collectors.toList());
-
-		List<ArtifactResponse> result = futures.stream().map(CompletableFuture::join).collect(Collectors.toList());
-
-		logger.info(" Procured all artifacts in {}ms ", timeMilli);
-		return getSecondMostUsedArtifact(result).getResponse();
+		return urls;
 	}
 
 	private String getAllFromArtifactory() {
@@ -144,24 +163,12 @@ public class ArtifactoryService {
 		return artifactFuture;
 	}
 
-	private static ExecutorService getExecutorService() {
-		if (executorService == null) {
-			executorService = new ThreadPoolExecutor(5, 10, 10L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10000));
-		}
-		return executorService;
-	}
-
-	public String getNthMostUsed() throws JSONException {
-		String artifact = "artifact";
-		return artifact;
-	}
-
 	private ArtifactResponse getArtifactWithRetries(String artifactUrl, int retriesCount) throws JSONException {
 
 		int currentAttempt = 0;
 
 		do {
-			ArtifactResponse response = getArtifactStats(artifactUrl);
+			ArtifactResponse response = getArtifactResponse(artifactUrl);
 
 			if (response.isStatus()) {
 				return response;
@@ -173,7 +180,7 @@ public class ArtifactoryService {
 		return null;
 	}
 
-	private ArtifactResponse getArtifactStats(String artifactUrl) throws JSONException {
+	private ArtifactResponse getArtifactResponse(String artifactUrl) throws JSONException {
 
 		HttpHeaders header = new HttpHeaders();
 		header.set("Content-Type", "application/json");
@@ -186,5 +193,12 @@ public class ArtifactoryService {
 		}
 
 		return response;
+	}
+	
+	private static ExecutorService getExecutorService() {
+		if (executorService == null) {
+			executorService = new ThreadPoolExecutor(5, 10, 10L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10000));
+		}
+		return executorService;
 	}
 }
