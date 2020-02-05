@@ -1,6 +1,4 @@
-package com.jfrog.assessment.api;
-
-import com.jfrog.assessment.model.ArtifactStat;
+package com.jfrog.assessment.model;
 
 public class ArtifactResponse  implements Comparable<ArtifactResponse>{
 	private ArtifactStat response;

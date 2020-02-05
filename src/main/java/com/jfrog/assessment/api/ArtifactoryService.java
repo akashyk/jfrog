@@ -27,11 +27,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.jfrog.assessment.dto.ArtifactDto;
+import com.jfrog.assessment.model.ArtifactResponse;
 import com.jfrog.assessment.model.ArtifactStat;
 
 /**
  * @author akashyellappa
- * 
+ *
  *         This service helps getting the second most used artifact from a demo
  *         artifactory - Orbitera
  */
@@ -78,24 +79,29 @@ public class ArtifactoryService {
 		List<ArtifactResponse> artifactsStats = getAllArtifactsStat(urls);
 
 		// 4. Get the second most used artifact
-		ArtifactStat result = getSecondMostUsedArtifact(artifactsStats).getResponse();
-		
-		
-		return new ArtifactDto() {
+		ArtifactResponse response = getSecondMostUsedArtifact(artifactsStats);
 
-			@Override
-			public String getUri() {
-				// TODO Auto-generated method stub
-				return result.getUri();
-			}
+		if(response != null)
+		{
+			ArtifactStat result = getSecondMostUsedArtifact(artifactsStats).getResponse();
 
-			@Override
-			public Integer getDownloadCount() {
-				// TODO Auto-generated method stub
-				return result.getDownloadCount();
-			}
+			return new ArtifactDto() {
 
-		};
+				@Override
+				public String getUri() {
+					// TODO Auto-generated method stub
+					return result.getUri();
+				}
+
+				@Override
+				public Integer getDownloadCount() {
+					// TODO Auto-generated method stub
+					return result.getDownloadCount();
+				}
+
+			};
+		}
+		return null;
 	}
 
 	private JSONArray getAllArtifacts() throws JSONException {
@@ -112,7 +118,8 @@ public class ArtifactoryService {
 		List<CompletableFuture<ArtifactResponse>> futures = urls.stream().map(url -> callApiFuture(url))
 				.collect(Collectors.toList());
 
-		List<ArtifactResponse> result = futures.stream().map(CompletableFuture::join).collect(Collectors.toList());
+		List<ArtifactResponse> result = futures.stream().map(CompletableFuture::join).collect(Collectors.toList())
+				.stream().filter(x -> x != null).collect(Collectors.toList());
 
 		logger.info(" Procured all artifacts in {}ms ", timeMilli);
 		return result;
@@ -152,11 +159,11 @@ public class ArtifactoryService {
 
 	private ArtifactResponse getSecondMostUsedArtifact(List<ArtifactResponse> allArtifacts) {
 
-		int downloadCount = 0;
-
 		if (allArtifacts.size() < 2) {
 			return null;
 		}
+
+		int downloadCount = 0;
 
 		Collections.sort(allArtifacts, Collections.reverseOrder());
 
